@@ -30,3 +30,16 @@ def test_unknown_ticket_returns_404(client):
 
 # Add your own tests below: one failing test for each bug you find,
 # plus at least 5 negative tests.
+
+
+def test_tickets_sorted_by_priority(client):
+    response = client.get("/api/tickets")
+
+    priorities = [
+        ticket["priority"]
+        for ticket in response.get_json()
+    ]
+
+    assert priorities == [
+        "High", "High", "Medium", "Medium", "Low"
+    ]
