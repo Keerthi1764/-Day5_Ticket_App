@@ -1,3 +1,4 @@
+
 import pytest
 
 from app import app, reset_tickets
@@ -28,10 +29,7 @@ def test_unknown_ticket_returns_404(client):
     assert response.status_code == 404
 
 
-# Add your own tests below: one failing test for each bug you find,
-# plus at least 5 negative tests.
-
-
+# Bug 1: Test ticket priority sorting
 def test_tickets_sorted_by_priority(client):
     response = client.get("/api/tickets")
 
@@ -44,6 +42,8 @@ def test_tickets_sorted_by_priority(client):
         "High", "High", "Medium", "Medium", "Low"
     ]
 
+
+# Bug 2: Test empty title validation
 def test_empty_title_returns_400(client):
     response = client.post(
         "/api/tickets",
@@ -56,3 +56,12 @@ def test_empty_title_returns_400(client):
     )
 
     assert response.status_code == 400
+
+
+# Bug 3: Test resolved status on screen
+def test_resolved_ticket_shows_resolved_on_screen(client):
+    response = client.get("/")
+    html = response.get_data(as_text=True)
+
+    assert response.status_code == 200
+    assert '<td><span class="badge">Resolved</span></td>' in html
