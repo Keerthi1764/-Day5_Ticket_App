@@ -65,3 +65,55 @@ def test_resolved_ticket_shows_resolved_on_screen(client):
 
     assert response.status_code == 200
     assert '<td><span class="badge">Resolved</span></td>' in html
+
+
+
+# Negative Test 1: Missing title
+def test_missing_title_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={"category": "Hardware"}
+    )
+    assert response.status_code == 400
+
+
+# Negative Test 2: Whitespace title
+def test_whitespace_title_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={"title": "   "}
+    )
+    assert response.status_code == 400
+
+
+# Negative Test 3: Invalid category
+def test_unknown_category_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={
+            "title": "Printer problem",
+            "category": "Furniture"
+        }
+    )
+    assert response.status_code == 400
+
+
+# Negative Test 4: Invalid priority
+def test_unknown_priority_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={
+            "title": "Printer problem",
+            "priority": "Urgent"
+        }
+    )
+    assert response.status_code == 400
+
+
+# Negative Test 5: Invalid status
+def test_unknown_status_returns_400(client):
+    response = client.patch(
+        "/api/tickets/1/status",
+        json={"status": "Waiting"}
+    )
+    assert response.status_code == 400
