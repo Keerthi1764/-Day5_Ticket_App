@@ -43,3 +43,16 @@ def test_tickets_sorted_by_priority(client):
     assert priorities == [
         "High", "High", "Medium", "Medium", "Low"
     ]
+
+def test_empty_title_returns_400(client):
+    response = client.post(
+        "/api/tickets",
+        json={
+            "title": "",
+            "description": "Printer problem",
+            "category": "Hardware",
+            "priority": "High"
+        }
+    )
+
+    assert response.status_code == 400
